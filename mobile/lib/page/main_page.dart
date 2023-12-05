@@ -51,32 +51,36 @@ class _MainPageState extends State<MainPage> {
                 children: value.map((menu) {
                   return Container(
                     margin: const EdgeInsets.all(10),
-                    child: Expanded(
-                      child: InkWell(
-                        highlightColor: Colors.transparent,
-                        splashColor: Colors.transparent,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MenuPage(menu: menu)));
-                        },
-                        child: Column(
-                          children: <Widget>[
-                            CachedNetworkImage(
-                              imageUrl: menu.image ?? '',
-                              height: 100,
+                    child: InkWell(
+                      highlightColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => MenuPage(
+                              menu: menu,
                             ),
-                            SizedBox(
-                              height: 10,
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: <Widget>[
+                          CachedNetworkImage(
+                            imageUrl: menu.image ?? '',
+                            height: 100,
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            menu.name ?? '',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Text(
-                              "Niat Shalat",
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.bold),
-                            )
-                          ],
-                        ),
+                          )
+                        ],
                       ),
                     ),
                   );

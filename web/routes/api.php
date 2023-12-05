@@ -19,4 +19,5 @@ Route::get('/menu', [MenuController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('/menu/{menu_item}/favorite', [MenuController::class, 'favorite']);
     Route::delete('/menu/{menu_item}/favorite', [MenuController::class, 'unfavorite']);
+    Route::get('/menu/favorites', [MenuController::class, 'favorites']);
 });

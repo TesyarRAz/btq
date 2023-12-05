@@ -7,7 +7,6 @@ use App\Filament\Resources\MenuResource\RelationManagers;
 use App\Models\Menu;
 use Filament\Forms;
 use Filament\Forms\Form;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
@@ -28,13 +27,17 @@ class MenuResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
-                    ->disk('public')
-                    ->directory('menu')
                     ->image()
                     ->required(),
                 Forms\Components\TextInput::make('title')
                     ->required()
                     ->maxLength(255),
+                Forms\Components\TextInput::make('subtitle')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\FileUpload::make('image_content')
+                    ->image()
+                    ->required(),
             ]);
     }
 
@@ -44,10 +47,12 @@ class MenuResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image')
-                    ->disk('public'),
+                Tables\Columns\ImageColumn::make('image'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('subtitle')
+                    ->searchable(),
+                Tables\Columns\ImageColumn::make('image_content'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

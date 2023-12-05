@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:bacaanshalat/model/menu.dart';
 import 'package:bacaanshalat/model/menu_item.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // ignore: library_prefixes
@@ -49,20 +50,20 @@ class _MenuPageState extends State<MenuPage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Text(
-                              "Bacaan Sholat",
+                              widget.menu?.title ?? '',
                               style: TextStyle(
                                   color: Color.fromARGB(255, 0, 0, 0),
                                   fontSize: 20,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,),
                             ),
                             Text(
-                              "Bacaan sholat dari doa Iftitah sampai Salam",
+                              widget.menu?.subtitle ?? '',
                               style: TextStyle(
                                   color: Color.fromARGB(255, 0, 0, 0),
                                   fontSize: 12,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,),
                             ),
                           ],
                         )),
@@ -70,17 +71,21 @@ class _MenuPageState extends State<MenuPage> {
                 ),
                 Align(
                   alignment: Alignment.topRight,
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(30),
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30),
-                    ),
-                    child: Image.asset(
-                      "assets/images/bg_sholat.gif",
-                      width: 140,
-                      height: 300,
-                      fit: BoxFit.fitWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 160, right: 10),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.menu.imageContent ?? '',
+                        errorWidget: (_, _url, _ex) => Placeholder(),
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fitWidth,
+                      ),
                     ),
                   ),
                 ),

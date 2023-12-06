@@ -41,7 +41,12 @@ class UserModel extends ChangeNotifier {
   set googleAccount(GoogleSignInAccount? value) {
     if (_googleAccount != value) {
       _googleAccount = value;
-      _loadUserData();
+      if (_googleAccount == null) {
+        user = null;
+        token = null;
+      } else {
+        _loadUserData();
+      }
       notifyListeners();
     }
   }

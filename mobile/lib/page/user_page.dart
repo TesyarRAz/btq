@@ -35,9 +35,9 @@ class _UserPageState extends State<UserPage> {
               Text("Email : ${userModel.user!.email}"),
             ],
             ElevatedButton(
-              child: Text(_currentUser == null ? 'Login' : 'Logout'),
+              child: Text(userModel.googleAccount == null ? 'Login' : 'Logout'),
               onPressed: () async {
-                if (_currentUser == null) {
+                if (userModel.googleAccount == null) {
                   _signIn(userModel);
                 } else {
                   _signOut(userModel);
@@ -54,11 +54,7 @@ class _UserPageState extends State<UserPage> {
     final auth = await _googleSignIn.signIn();
     if (auth == null) return;
 
-    Provi
-
-    setState(() {
-      _currentUser = auth;
-    });
+    userModel.googleAccount = auth;
   }
 
   Future<void> _signOut(UserModel userModel) async {
@@ -67,8 +63,6 @@ class _UserPageState extends State<UserPage> {
     userModel.user = null;
     userModel.token = null;
 
-    setState(() {
-      _currentUser = auth;
-    });
+    userModel.googleAccount = auth;
   }
 }

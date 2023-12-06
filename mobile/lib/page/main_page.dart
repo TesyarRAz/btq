@@ -1,5 +1,6 @@
 import 'package:bacaanshalat/model/menu.dart';
 import 'package:bacaanshalat/network.dart';
+import 'package:bacaanshalat/page/favorite_page.dart';
 import 'package:bacaanshalat/page/menu_page.dart';
 import 'package:bacaanshalat/widget/app_bar_popup_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -43,6 +44,9 @@ class _MainPageState extends State<MainPage> {
               return GridView.count(
                 crossAxisCount: 2,
                 children: value.map((menu) {
+                  if (menu.name?.toLowerCase() == 'favorite') {
+                    return _buildFavoriteWidget(menu);
+                  }
                   return Container(
                     margin: const EdgeInsets.all(10),
                     child: InkWell(
@@ -87,9 +91,45 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future<void> _loadData() async {
-    var menu = await Network.instance.getMenu();
+  Widget _buildFavoriteWidget(Menu menu) {
+    return Container(
+      margin: const EdgeInsets.all(10),
+      child: InkWell(
+        highlightColor: Colors.transparent,
+        splashColor: Colors.transparent,
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const FavoritePage(),
+            ),
+          );
+        },
+        child: Column(
+          children: <Widget>[
+            CachedNetworkImage(
+              imageUrl: menu.image ?? '',
+              height: 100,
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              menu.name ?? '',
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
 
-    _data.value = menu;
+  Future<void> _loadData() async {
+    var menus = await Network.instance.getMenu();
+
+    _data.value = menus;
   }
 }

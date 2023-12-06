@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  var appData = await loadFromSharedPreferences();
+  var appData = await loadFromAppData();
 
   runApp(
     MultiProvider(

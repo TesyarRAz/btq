@@ -14,9 +14,7 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  final _googleSignIn = GoogleSignIn(
-    scopes: ['openid', 'email', 'profile'],
-  );
+  final _googleSignIn = GoogleSignIn();
   GoogleSignInAccount? _currentUser;
 
   @override
@@ -66,19 +64,6 @@ class _UserPageState extends State<UserPage> {
     setState(() {
       _currentUser = auth;
     });
-
-    var providerToken = (await auth.authentication).accessToken;
-    if (providerToken == null) return;
-
-    var accessToken = await Network.instance.getUserDataFromProviderToken(providerToken);
-    if (accessToken == null) return;
-
-    userModel.token = accessToken;
-
-    var user = await Network.instance.getUserData(accessToken);
-    if (user == null) return;
-
-    userModel.user = user;
   }
 
   Future<void> _signOut(UserModel userModel) async {

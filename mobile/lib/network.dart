@@ -6,7 +6,7 @@ import 'package:bacaanshalat/model/user.dart';
 import 'package:dio/dio.dart';
 
 class Network {
-  static String baseUrl = "http://172.28.16.1:8000/api";
+  static String baseUrl = "https://btq.tesyarraz.my.id";
 
   Network._();
 
@@ -21,11 +21,12 @@ class Network {
   final dio = Dio(
     BaseOptions(
       responseType: ResponseType.json,
+      baseUrl: baseUrl,
     ),
   );
 
   Future<String?> getUserDataFromProviderToken(String providerToken) async {
-    var response = await dio.post("$baseUrl/social/google/login", data: {
+    var response = await dio.post("/social/google/login", data: {
       "access_token": providerToken,
     });
 
@@ -37,7 +38,7 @@ class Network {
   }
 
   Future<User?> getUserData(String token) async {
-    var response = await dio.get("$baseUrl/user", options: Options(
+    var response = await dio.get("/api/user", options: Options(
       headers: {
         'Authorization': 'Bearer $token',
       },
@@ -56,7 +57,7 @@ class Network {
       headers['Authorization'] = 'Bearer $token';
     }
 
-    var response = await dio.get("$baseUrl/menu",
+    var response = await dio.get("/api/menu",
         options: Options(
           headers: headers,
         ));
@@ -71,7 +72,7 @@ class Network {
   }
 
   Future<List<Menu>> getFavoritesMenu(String token) async {
-    var response = await dio.get("$baseUrl/menu/favorites",
+    var response = await dio.get("/api/menu/favorites",
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -88,7 +89,7 @@ class Network {
   }
 
   Future<bool> favoriteMenuItem(int id, String token) async {
-    var response = await dio.post("$baseUrl/menu/$id/favorite",
+    var response = await dio.post("/api/menu/$id/favorite",
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',
@@ -99,7 +100,7 @@ class Network {
   }
 
   Future<bool> unfavoriteMenuItem(int id, String token) async {
-    var response = await dio.delete("$baseUrl/menu/$id/favorite",
+    var response = await dio.delete("/api/menu/$id/favorite",
         options: Options(
           headers: {
             'Authorization': 'Bearer $token',

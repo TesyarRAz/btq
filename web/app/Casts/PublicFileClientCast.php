@@ -15,8 +15,8 @@ class PublicFileClientCast implements CastsAttributes
      */
     public function get(Model $model, string $key, mixed $value, array $attributes): mixed
     {
-        $convert = request()->route()->getPrefix() === 'api';
-        
+        $convert = in_array('api', request()->route()->getAction('middleware'));
+
         return $value == null ? null : ($convert ? Storage::disk('public')->url($value) : $value);
     }
 

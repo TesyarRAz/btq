@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\MenuController;
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/menu', [MenuController::class, 'index']);
 Route::middleware('auth:sanctum')->group(function() {
+    Route::get('/user', [UserController::class, 'user']);
     Route::get('/menu/favorites', [MenuController::class, 'favorites']);
     Route::post('/menu/{menu_item}/favorite', [MenuController::class, 'favorite']);
     Route::delete('/menu/{menu_item}/favorite', [MenuController::class, 'unfavorite']);

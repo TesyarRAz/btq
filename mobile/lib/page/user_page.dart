@@ -15,17 +15,10 @@ class UserPage extends StatefulWidget {
 
 class _UserPageState extends State<UserPage> {
   final _googleSignIn = GoogleSignIn();
-  GoogleSignInAccount? _currentUser;
 
   @override
   void initState() {
     super.initState();
-
-    _googleSignIn.signInSilently().then((value) {
-      setState(() {
-        _currentUser = value;
-      });
-    });
   }
 
   @override
@@ -60,6 +53,8 @@ class _UserPageState extends State<UserPage> {
   Future<void> _signIn(UserModel userModel) async {
     final auth = await _googleSignIn.signIn();
     if (auth == null) return;
+
+    Provi
 
     setState(() {
       _currentUser = auth;

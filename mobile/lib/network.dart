@@ -26,7 +26,7 @@ class Network {
   );
 
   Future<String?> getUserDataFromProviderToken(String providerToken) async {
-    var response = await dio.post("/social/google/login", data: {
+    var response = await dio.get("/social/google/login", queryParameters: {
       "access_token": providerToken,
     });
 

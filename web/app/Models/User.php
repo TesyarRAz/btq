@@ -26,6 +26,6 @@ class User extends Authenticatable
 
     public function favorite_menu_items()
     {
-        return $this->belongsToMany(MenuItem::class)->using(FavoriteMenuItem::class);
+        return $this->belongsToMany(MenuItem::class, 'favorite_menu_item')->using(FavoriteMenuItem::class);
     }
 }

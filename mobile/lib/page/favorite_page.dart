@@ -22,7 +22,7 @@ class _FavoritePageState extends State<FavoritePage> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      var userModel = Provider.of<UserModel>(context);
+      var userModel = Provider.of<UserModel>(context, listen: false);
       var token = userModel.token;
 
       if (token != null) {

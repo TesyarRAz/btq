@@ -27,6 +27,7 @@ class MenuResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image')
+                    ->disk('public')
                     ->image()
                     ->required(),
                 Forms\Components\TextInput::make('title')
@@ -36,6 +37,7 @@ class MenuResource extends Resource
                     ->required()
                     ->maxLength(255),
                 Forms\Components\FileUpload::make('image_content')
+                    ->disk('public')
                     ->image()
                     ->required(),
             ]);
@@ -47,12 +49,12 @@ class MenuResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image'),
+                Tables\Columns\ImageColumn::make('image')->disk('public'),
                 Tables\Columns\TextColumn::make('title')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('subtitle')
                     ->searchable(),
-                Tables\Columns\ImageColumn::make('image_content'),
+                Tables\Columns\ImageColumn::make('image_content')->disk('public'),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -20,20 +20,40 @@ class _UserPageState extends State<UserPage> {
   GoogleSignInAccount? _currentUser;
 
   @override
+  void initState() {
+    super.initState();
+
+    _googleSignIn.signInSilently().then((value) {
+      setState(() {
+        _currentUser = value;
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var userModel = Provider.of<UserModel>(context);
 
     return Scaffold(
       body: Center(
-        child: ElevatedButton(
-          child: Text(_currentUser == null ? 'Login' : 'Logout'),
-          onPressed: () async {
-            if (_currentUser == null) {
-              _signIn(userModel);
-            } else {
-              _signOut(userModel);
-            }
-          },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (userModel.user != null) ...[
+              Text("Nama : ${userModel.user!.name}"),
+              Text("Email : ${userModel.user!.email}"),
+            ],
+            ElevatedButton(
+              child: Text(_currentUser == null ? 'Login' : 'Logout'),
+              onPressed: () async {
+                if (_currentUser == null) {
+                  _signIn(userModel);
+                } else {
+                  _signOut(userModel);
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -41,18 +61,31 @@ class _UserPageState extends State<UserPage> {
 
   Future<void> _signIn(UserModel userModel) async {
     final auth = await _googleSignIn.signIn();
-
-    if (auth != null) {
-      Network.instance.
-    }
+    if (auth == null) return;
 
     setState(() {
       _currentUser = auth;
     });
+
+    var providerToken = (await auth.authentication).accessToken;
+    if (providerToken == null) return;
+
+    var accessToken = await Network.instance.getUserDataFromProviderToken(providerToken);
+    if (accessToken == null) return;
+
+    userModel.token = accessToken;
+
+    var user = await Network.instance.getUserData(accessToken);
+    if (user == null) return;
+
+    userModel.user = user;
   }
 
   Future<void> _signOut(UserModel userModel) async {
     final auth = await _googleSignIn.signOut();
+
+    userModel.user = null;
+    userModel.token = null;
 
     setState(() {
       _currentUser = auth;

@@ -24,8 +24,16 @@ class Network {
     ),
   );
 
-  Future<String> getUserToken(String providerToken) async {
-    var response = await dio.get("$baseUrl/social/google/login", );
+  Future<String?> getUserDataFromProviderToken(String providerToken) async {
+    var response = await dio.post("$baseUrl/social/google/login", data: {
+      "access_token": providerToken,
+    });
+
+    if (response.statusCode == 200) {
+      return response.data['token'];
+    }
+
+    return null;
   }
 
   Future<User?> getUserData(String token) async {

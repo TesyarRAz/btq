@@ -21,7 +21,7 @@ class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(179, 117, 1, 1),
+      backgroundColor: const Color.fromARGB(179, 117, 1, 1),
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,31 +42,34 @@ class _MenuPageState extends State<MenuPage> {
                     margin: const EdgeInsets.only(top: 80),
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(30),
-                        color: Color.fromARGB(255, 255, 255, 255)),
+                        color: const Color.fromARGB(255, 255, 255, 255)),
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     child: Container(
-                        margin: const EdgeInsets.only(top: 120, left: 20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              widget.menu?.title ?? '',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,),
+                      margin: const EdgeInsets.only(top: 120, left: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            widget.menu?.title ?? '',
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Text(
-                              widget.menu?.subtitle ?? '',
-                              style: TextStyle(
-                                  color: Color.fromARGB(255, 0, 0, 0),
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,),
+                          ),
+                          Text(
+                            widget.menu?.subtitle ?? '',
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
                             ),
-                          ],
-                        )),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
                 Align(
@@ -81,7 +84,7 @@ class _MenuPageState extends State<MenuPage> {
                       ),
                       child: CachedNetworkImage(
                         imageUrl: widget.menu.imageContent ?? '',
-                        errorWidget: (_, _url, _ex) => Placeholder(),
+                        errorWidget: (_, _url, _ex) => const Placeholder(),
                         width: 100,
                         height: 100,
                         fit: BoxFit.fitWidth,

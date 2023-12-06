@@ -2,10 +2,11 @@ import 'dart:convert';
 
 import 'package:bacaanshalat/model/menu.dart';
 import 'package:bacaanshalat/model/menu_item.dart';
+import 'package:bacaanshalat/model/user.dart';
 import 'package:dio/dio.dart';
 
 class Network {
-  static String BASE_URL = "http://10.0.2.2:8000/api";
+  static String baseUrl = "http://172.28.16.1:8000/api";
 
   Network._();
 
@@ -23,39 +24,79 @@ class Network {
     ),
   );
 
-  Future<List<Menu>> getMenu([String? token]) async {
-      Map<String, dynamic> headers = {};
-      if (token != null) {
-        headers['Authorization'] = 'Bearer $token';
-      }
-
-      var response = await dio.get("$BASE_URL/menu", options: Options(
-        headers: headers,
-      ));
-
-      if (response.statusCode == 200) {
-        return (response.data['data'] as List<dynamic>).map((e) => Menu.fromJson(e)).toList();
-      }
-
-      return [];
+  Future<String> getUserToken(String providerToken) async {
+    var response = await dio.get("$baseUrl/social/google/login", );
   }
 
-  Future<bool> favoriteMenuItem(int id, String token) async {
-    var response = await dio.post("$BASE_URL/menu/${id}/favorite", options: Options(
+  Future<User?> getUserData(String token) async {
+    var response = await dio.get("$baseUrl/user", options: Options(
       headers: {
         'Authorization': 'Bearer $token',
       },
     ));
+
+    if (response.statusCode == 200) {
+      return User.fromJson(response.data['user']);
+    }
+
+    return null;
+  }
+
+  Future<List<Menu>> getMenu([String? token]) async {
+    Map<String, dynamic> headers = {};
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    var response = await dio.get("$baseUrl/menu",
+        options: Options(
+          headers: headers,
+        ));
+
+    if (response.statusCode == 200) {
+      return (response.data['data'] as List<dynamic>)
+          .map((e) => Menu.fromJson(e))
+          .toList();
+    }
+
+    return [];
+  }
+
+  Future<List<Menu>> getFavoritesMenu(String token) async {
+    var response = await dio.get("$baseUrl/menu/favorites",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ));
+
+    if (response.statusCode == 200) {
+      return (response.data['data'] as List<dynamic>)
+          .map((e) => Menu.fromJson(e))
+          .toList();
+    }
+
+    return [];
+  }
+
+  Future<bool> favoriteMenuItem(int id, String token) async {
+    var response = await dio.post("$baseUrl/menu/$id/favorite",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ));
 
     return response.statusCode == 200;
   }
 
   Future<bool> unfavoriteMenuItem(int id, String token) async {
-    var response = await dio.delete("$BASE_URL/menu/${id}/favorite", options: Options(
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    ));
+    var response = await dio.delete("$baseUrl/menu/$id/favorite",
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $token',
+          },
+        ));
 
     return response.statusCode == 200;
   }

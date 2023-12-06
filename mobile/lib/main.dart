@@ -1,8 +1,24 @@
+import 'package:bacaanshalat/app_data.dart';
 import 'package:bacaanshalat/page/main_page.dart';
+import 'package:bacaanshalat/page/user_page.dart';
+import 'package:bacaanshalat/provider/user_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  var appData = await loadFromSharedPreferences();
+
+  runApp(
+    MultiProvider(
+      providers: [
+        Provider.value(value: appData),
+        ChangeNotifierProvider(create: (_) => UserModel(appData)),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -15,7 +31,11 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       debugShowCheckedModeBanner: false,
-      home: const MainPage(),
+      initialRoute: "/",
+      routes: {
+        MainPage.route: (_) => const MainPage(),
+        UserPage.route: (_) => const UserPage(),
+      },
     );
   }
 }

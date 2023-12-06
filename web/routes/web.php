@@ -20,4 +20,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('social/google/login', [GoogleAuthController::class, 'login']);
+Route::get('social/google/redirect', [GoogleAuthController::class, 'redirect']);
+Route::get('social/google/callback', [GoogleAuthController::class, 'callback']);
+Route::post('social/google/login', [GoogleAuthController::class, 'login']);

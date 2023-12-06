@@ -1,27 +1,34 @@
 import 'package:bacaanshalat/model/menu.dart';
 import 'package:bacaanshalat/network.dart';
 import 'package:bacaanshalat/page/menu_page.dart';
+import 'package:bacaanshalat/provider/user_model.dart';
 import 'package:bacaanshalat/widget/app_bar_popup_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-class MainPage extends StatefulWidget {
-  static const route = "/";
-
-  const MainPage({Key? key}) : super(key: key);
+class FavoritePage extends StatefulWidget {
+  const FavoritePage({Key? key}) : super(key: key);
 
   @override
-  State<MainPage> createState() => _MainPageState();
+  State<FavoritePage> createState() => _FavoritePageState();
 }
 
-class _MainPageState extends State<MainPage> {
+class _FavoritePageState extends State<FavoritePage> {
   final _data = ValueNotifier<List<Menu>>([]);
 
   @override
   void initState() {
     super.initState();
 
-    _loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var userModel = Provider.of<UserModel>(context);
+      var token = userModel.token;
+
+      if (token != null) {
+        _loadData(token);
+      }
+    });
   }
 
   @override
@@ -31,6 +38,7 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('BTQ Mobile'),
+        leading: const BackButton(),
         actions: const [
           AppBarPopupWidget(),
         ],
@@ -87,8 +95,8 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future<void> _loadData() async {
-    var menu = await Network.instance.getMenu();
+  Future<void> _loadData(String token) async {
+    var menu = await Network.instance.getFavoritesMenu(token);
 
     _data.value = menu;
   }

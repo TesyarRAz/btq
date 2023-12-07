@@ -12,6 +12,10 @@ class MenuItem extends Model
 
     protected $guarded = ['id'];
 
+    protected $casts = [
+        'is_favorite' => 'boolean',
+    ];
+
     public function menu()
     {
         return $this->belongsTo(Menu::class);

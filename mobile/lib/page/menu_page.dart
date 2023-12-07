@@ -1,11 +1,14 @@
 import 'dart:convert';
 import 'package:bacaanshalat/model/menu.dart';
 import 'package:bacaanshalat/model/menu_item.dart';
+import 'package:bacaanshalat/network.dart';
+import 'package:bacaanshalat/provider/user_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 // ignore: library_prefixes
 import 'package:flutter/services.dart' as rootBundle;
+import 'package:provider/provider.dart';
 
 class MenuPage extends StatefulWidget {
   Menu menu;
@@ -20,6 +23,8 @@ class MenuPage extends StatefulWidget {
 class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
+    var userModel = Provider.of<UserModel>(context);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(179, 117, 1, 1),
       body: SafeArea(
@@ -41,8 +46,9 @@ class _MenuPageState extends State<MenuPage> {
                   child: Container(
                     margin: const EdgeInsets.only(top: 80),
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(30),
-                        color: const Color.fromARGB(255, 255, 255, 255)),
+                      borderRadius: BorderRadius.circular(30),
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                    ),
                     height: 200,
                     width: MediaQuery.of(context).size.width,
                     child: Container(
@@ -101,6 +107,7 @@ class _MenuPageState extends State<MenuPage> {
                 itemBuilder: (context, index) {
                   var item = widget.menu.menuItems![index];
                   return Card(
+                    key: ValueKey(item.id),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
@@ -176,6 +183,17 @@ class _MenuPageState extends State<MenuPage> {
                                       ],
                                     ),
                                   ),
+                                ),
+                                IconButton(
+                                  icon: Icon((item.isFavorite ?? false) ? Icons.favorite : Icons.favorite_outline),
+                                  onPressed: () {
+                                    var future = (item.isFavorite ?? false) ? Network.instance.unfavoriteMenuItem(item.id!, userModel.token!) : Network.instance.favoriteMenuItem(item.id!, userModel.token!);
+                                    future.then((value) {
+                                      setState(() {
+                                        item.isFavorite = !(item.isFavorite ?? false);
+                                      });
+                                    });
+                                  },
                                 )
                               ],
                             ),

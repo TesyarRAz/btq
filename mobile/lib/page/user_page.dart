@@ -14,7 +14,9 @@ class UserPage extends StatefulWidget {
 }
 
 class _UserPageState extends State<UserPage> {
-  final _googleSignIn = GoogleSignIn();
+  final _googleSignIn = GoogleSignIn(
+    scopes: ['openid', 'email', 'profile'],
+  );
 
   @override
   void initState() {

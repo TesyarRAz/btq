@@ -18,8 +18,8 @@ class Menu {
     name = json['name'];
     image = json['image'];
     title = json['title'];
-    subtitle = json['title'];
-    imageContent = json['title'];
+    subtitle = json['subtitle'];
+    imageContent = json['image_content'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     if (json['menu_items'] != null) {

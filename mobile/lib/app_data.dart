@@ -13,7 +13,9 @@ class AppData {
 
 Future<AppData> loadFromAppData() async {
   var prefs = await SharedPreferences.getInstance();
-  var googleAccount = await GoogleSignIn().signInSilently();
+  var googleAccount = await GoogleSignIn(
+    scopes: ['openid', 'email', 'profile'],
+  ).signInSilently();
 
   return AppData(
     token: prefs.getString("token"),

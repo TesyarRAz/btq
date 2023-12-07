@@ -184,17 +184,18 @@ class _MenuPageState extends State<MenuPage> {
                                     ),
                                   ),
                                 ),
-                                IconButton(
-                                  icon: Icon((item.isFavorite ?? false) ? Icons.favorite : Icons.favorite_outline),
-                                  onPressed: () {
-                                    var future = (item.isFavorite ?? false) ? Network.instance.unfavoriteMenuItem(item.id!, userModel.token!) : Network.instance.favoriteMenuItem(item.id!, userModel.token!);
-                                    future.then((value) {
-                                      setState(() {
-                                        item.isFavorite = !(item.isFavorite ?? false);
+                                if (userModel.isLoggedIn)
+                                  IconButton(
+                                    icon: Icon((item.isFavorite ?? false) ? Icons.favorite : Icons.favorite_outline),
+                                    onPressed: () {
+                                      var future = (item.isFavorite ?? false) ? Network.instance.unfavoriteMenuItem(item.id!, userModel.token!) : Network.instance.favoriteMenuItem(item.id!, userModel.token!);
+                                      future.then((value) {
+                                        setState(() {
+                                          item.isFavorite = !(item.isFavorite ?? false);
+                                        });
                                       });
-                                    });
-                                  },
-                                )
+                                    },
+                                  ),
                               ],
                             ),
                           ),

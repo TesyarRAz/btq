@@ -38,14 +38,14 @@ class UserModel extends ChangeNotifier {
     }
   }
 
-  set googleAccount(GoogleSignInAccount? value) {
+  Future<void> setGoogleAccount(GoogleSignInAccount? value) async {
     if (_googleAccount != value) {
       _googleAccount = value;
       if (_googleAccount == null) {
         user = null;
         token = null;
       } else {
-        _loadUserData();
+        await _loadUserData();
       }
       notifyListeners();
     }

@@ -1,4 +1,5 @@
 import 'package:bacaanshalat/model/menu.dart';
+import 'package:bacaanshalat/model/menu_item.dart';
 import 'package:bacaanshalat/network.dart';
 import 'package:bacaanshalat/page/menu_page.dart';
 import 'package:bacaanshalat/provider/user_model.dart';
@@ -8,14 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class FavoritePage extends StatefulWidget {
-  const FavoritePage({Key? key}) : super(key: key);
+  final Menu menu;
+
+  const FavoritePage({Key? key, required this.menu}) : super(key: key);
 
   @override
   State<FavoritePage> createState() => _FavoritePageState();
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-  final _data = ValueNotifier<List<Menu>>([]);
+  final _data = ValueNotifier<List<MenuItem>>([]);
 
   @override
   void initState() {
@@ -30,66 +33,185 @@ class _FavoritePageState extends State<FavoritePage> {
       }
     });
   }
-
   @override
   Widget build(BuildContext context) {
+    var userModel = Provider.of<UserModel>(context);
+
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text('BTQ Mobile'),
-        leading: const BackButton(),
-        actions: const [
-          AppBarPopupWidget(),
-        ],
-      ),
+      backgroundColor: const Color.fromARGB(179, 117, 1, 1),
       body: SafeArea(
-        child: Center(
-          child: ValueListenableBuilder(
-            valueListenable: _data,
-            builder: (context, value, child) {
-              return GridView.count(
-                crossAxisCount: 2,
-                children: value.map((menu) {
-                  return Container(
-                    margin: const EdgeInsets.all(10),
-                    child: InkWell(
-                      highlightColor: Colors.transparent,
-                      splashColor: Colors.transparent,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => MenuPage(
-                              menu: menu,
-                            ),
-                          ),
-                        );
-                      },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    icon: const Icon(Icons.arrow_back,
+                        color: Color.fromARGB(255, 248, 243, 243)),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 80),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                    ),
+                    height: 200,
+                    width: MediaQuery.of(context).size.width,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 120, left: 20),
                       child: Column(
-                        children: <Widget>[
-                          CachedNetworkImage(
-                            imageUrl: menu.image ?? '',
-                            height: 100,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
                           Text(
-                            menu.name ?? '',
+                            widget.menu?.title ?? '',
                             style: const TextStyle(
-                              fontSize: 14,
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
-                          )
+                          ),
+                          Text(
+                            widget.menu?.subtitle ?? '',
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 0, 0, 0),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-                  );
-                }).toList(),
-              );
-            },
-          ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 160, right: 10),
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(30),
+                        bottomLeft: Radius.circular(30),
+                        bottomRight: Radius.circular(30),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.menu.imageContent ?? '',
+                        errorWidget: (_, _url, _ex) => const Placeholder(),
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            ValueListenableBuilder(
+              valueListenable: _data,
+              builder: (context, menuItems, _) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: menuItems.length,
+                    itemBuilder: (context, index) {
+                      var item = menuItems[index];
+                      return Card(
+                        key: ValueKey(item.id),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        elevation: 5,
+                        margin: const EdgeInsets.all(15),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            dividerColor: Colors.transparent,
+                          ),
+                          child: ExpansionTile(
+                            title: Text(
+                              item.name.toString(),
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(8),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        padding: const EdgeInsets.only(bottom: 8),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                          children: [
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8,
+                                                right: 8,
+                                              ),
+                                              child: Text(
+                                                item.arabic.toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8,
+                                                right: 8,
+                                              ),
+                                              child: Text(
+                                                item.latin.toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 14,
+                                                  fontStyle: FontStyle.italic,
+                                                ),
+                                              ),
+                                            ),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 8,
+                                                right: 8,
+                                                top: 5,
+                                              ),
+                                              child: Text(
+                                                item.terjemahan.toString(),
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              }
+            ),
+          ],
         ),
       ),
     );

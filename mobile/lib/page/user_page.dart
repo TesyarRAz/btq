@@ -18,6 +18,8 @@ class _UserPageState extends State<UserPage> {
     scopes: ['openid', 'email', 'profile'],
   );
 
+  var isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +37,8 @@ class _UserPageState extends State<UserPage> {
             if (userModel.user != null) ...[
               Text("Nama : ${userModel.user!.name}"),
               Text("Email : ${userModel.user!.email}"),
-            ],
+            ] else if (isLoading)
+              const CircularProgressIndicator(),
             ElevatedButton(
               child: Text(userModel.googleAccount == null ? 'Login' : 'Logout'),
               onPressed: () async {
@@ -56,7 +59,13 @@ class _UserPageState extends State<UserPage> {
     final auth = await _googleSignIn.signIn();
     if (auth == null) return;
 
-    userModel.googleAccount = auth;
+    setState(() {
+      isLoading = true;
+    });
+    await userModel.setGoogleAccount(auth);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   Future<void> _signOut(UserModel userModel) async {
@@ -65,6 +74,12 @@ class _UserPageState extends State<UserPage> {
     userModel.user = null;
     userModel.token = null;
 
-    userModel.googleAccount = auth;
+    setState(() {
+      isLoading = true;
+    });
+    await userModel.setGoogleAccount(auth);
+    setState(() {
+      isLoading = false;
+    });
   }
 }

@@ -71,7 +71,7 @@ class Network {
     return [];
   }
 
-  Future<List<Menu>> getFavoritesMenu(String token) async {
+  Future<List<MenuItem>> getFavoritesMenu(String token) async {
     var response = await dio.get("/api/menu/favorites",
         options: Options(
           headers: {
@@ -81,7 +81,7 @@ class Network {
 
     if (response.statusCode == 200) {
       return (response.data['data'] as List<dynamic>)
-          .map((e) => Menu.fromJson(e))
+          .map((e) => MenuItem.fromJson(e))
           .toList();
     }
 

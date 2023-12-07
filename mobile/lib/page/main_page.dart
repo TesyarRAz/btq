@@ -2,9 +2,11 @@ import 'package:bacaanshalat/model/menu.dart';
 import 'package:bacaanshalat/network.dart';
 import 'package:bacaanshalat/page/favorite_page.dart';
 import 'package:bacaanshalat/page/menu_page.dart';
+import 'package:bacaanshalat/provider/user_model.dart';
 import 'package:bacaanshalat/widget/app_bar_popup_widget.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   static const route = "/";
@@ -27,6 +29,8 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
+    var userModel = Provider.of<UserModel>(context);
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 255, 255, 255),
       appBar: AppBar(
@@ -41,6 +45,9 @@ class _MainPageState extends State<MainPage> {
           child: ValueListenableBuilder(
             valueListenable: _data,
             builder: (context, value, child) {
+              if (!userModel.isLoggedIn) {
+                value = value.where((element) => element.name?.toLowerCase() != 'favorite').toList();
+              }
               return GridView.count(
                 crossAxisCount: 2,
                 children: value.map((menu) {
@@ -101,7 +108,9 @@ class _MainPageState extends State<MainPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const FavoritePage(),
+              builder: (context) => FavoritePage(
+                menu: menu,
+              ),
             ),
           );
         },

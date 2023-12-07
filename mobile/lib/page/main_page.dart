@@ -28,9 +28,7 @@ class _MainPageState extends State<MainPage> {
       var userModel = Provider.of<UserModel>(context, listen: false);
       var token = userModel.token;
 
-      if (token != null) {
-        _loadData(token);
-      }
+      _loadData(token);
     });
   }
 

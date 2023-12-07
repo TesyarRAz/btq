@@ -24,7 +24,14 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
-    _loadData();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      var userModel = Provider.of<UserModel>(context, listen: false);
+      var token = userModel.token;
+
+      if (token != null) {
+        _loadData(token);
+      }
+    });
   }
 
   @override
@@ -136,8 +143,8 @@ class _MainPageState extends State<MainPage> {
     );
   }
 
-  Future<void> _loadData() async {
-    var menus = await Network.instance.getMenu();
+  Future<void> _loadData(String? token) async {
+    var menus = await Network.instance.getMenu(token);
 
     _data.value = menus;
   }

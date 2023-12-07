@@ -10,13 +10,6 @@ class UserModel extends ChangeNotifier {
   User? _user;
   String? _token;
 
-  UserModel(AppData appData) {
-    _token = appData.token;
-    _googleAccount = appData.googleAccount;
-
-    _loadUserData();
-  }
-
   set user(User? value) {
     if (_user != value) {
       _user = value;

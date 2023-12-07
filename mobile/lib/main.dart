@@ -9,12 +9,15 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var appData = await loadFromAppData();
+  var userModel = UserModel();
+  userModel.token = appData.token;
+  await userModel.setGoogleAccount(appData.googleAccount);
 
   runApp(
     MultiProvider(
       providers: [
         Provider.value(value: appData),
-        ChangeNotifierProvider(create: (_) => UserModel(appData)),
+        ChangeNotifierProvider(create: (_) => userModel),
       ],
       child: const MyApp(),
     ),
